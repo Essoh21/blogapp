@@ -1,23 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple blog</title>
-  </head>
+  <%- include('./partials/head.ejs') %>
   <body>
-    <nav>
-      <div class="site-title">
-        <a href="/"><h1>some simple blog</h1> </a>
-        <p>very simple web site using NodeJss</p>
-      </div>
-      <ul>
-        <li><a href="/">Blogs</a></li>
-        <li><a href="/about">about</a></li>
-        <li><a href="/blogs/create">new blog</a></li>
-      </ul>
-    </nav>
+    <%- include('./partials/nav.ejs') %>
     <div class="about content">
       <h2>about</h2>
       <p>
@@ -39,5 +24,6 @@
         rerum. Excepturi, laudantium et.
       </p>
     </div>
+    <%- include('./partials/footer.ejs') %>
   </body>
 </html>
