@@ -1,8 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const Blog = require("./src/models/blog");
-const { render } = require("ejs");
+const blogRoutes = require("./src/routes/blogRoutes/blogRoutes");
 // express app
 const app = express();
 const port = 8000;
@@ -21,7 +20,7 @@ mongoose
   )
   .catch((err) => console.log(err));
 app.set("view engine", "ejs");
-app.set("views", "src");
+app.set("views", "src/views");
 // a third party middleware named morgan
 app.use(morgan("dev"));
 
@@ -36,49 +35,7 @@ app.get("/about", (req, res) => {
   res.render("about", { title: "about" });
 });
 // blog routes
-app.get("/blogs", (req, res) => {
-  Blog.find()
-    .sort({ createdAt: -1 })
-    .then((result) => {
-      res.render("index", { title: "all blogs", blogs: result });
-    });
-});
-
-app.post("/blogs", (req, res) => {
-  const blog = new Blog(req.body);
-  blog
-    .save()
-    .then((reslutl) => {
-      res.redirect("/blogs");
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-app.get("/blogs/:id", (req, res) => {
-  const id = req.params.id;
-  Blog.findById(id)
-    .then((result) => {
-      res.render("details", { blog: result, title: "blog details" });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-app.delete("/blogs/:id", (req, res) => {
-  const id = req.params.id;
-  Blog.findByIdAndDelete(id)
-    .then((result) => {
-      res.json({
-        redirect: "/blogs",
-      });
-    })
-    .then((error) => {
-      console.log(error);
-    });
-});
+app.use("/blogs", blogRoutes);
 app.get("/create", (req, res) => {
   res.render("create", { title: "new " });
 });
