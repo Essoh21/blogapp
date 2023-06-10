@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const Blog = require("./src/models/blog");
+const { render } = require("ejs");
 // express app
 const app = express();
 const port = 8000;
@@ -44,7 +45,39 @@ app.get("/blogs", (req, res) => {
 });
 
 app.post("/blogs", (req, res) => {
-  console.log(req.body);
+  const blog = new Blog(req.body);
+  blog
+    .save()
+    .then((reslutl) => {
+      res.redirect("/blogs");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
+app.get("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id)
+    .then((result) => {
+      res.render("details", { blog: result, title: "blog details" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
+app.delete("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({
+        redirect: "/blogs",
+      });
+    })
+    .then((error) => {
+      console.log(error);
+    });
 });
 app.get("/create", (req, res) => {
   res.render("create", { title: "new " });
